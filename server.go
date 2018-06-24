@@ -170,7 +170,7 @@ func (server *Server) handle(c net.Conn, handler Handler) {
 		}
 	}()
 
-	var ctx Context = NewContext().InjectLogger(logger)
+	var ctx Context = NewContext().InjectLogger(logger).InjectConn(c)
 
 	var w Writer = newDataWriter(c)
 	var r Reader = newDataReader(c)

@@ -3,7 +3,7 @@ package telsh
 
 import (
 	"github.com/reiver/go-oi"
-	"github.com/reiver/go-telnet"
+	"github.com/majgis/go-telnet"
 
 	"io"
 	"sort"
