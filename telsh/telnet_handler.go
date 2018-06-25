@@ -27,6 +27,7 @@ type ShellHandler struct {
 
 	ExitCommandName string
 	Prompt          string
+	PromptHandler   func(telnet.Context) string
 	WelcomeMessage  string
 	ExitMessage     string
 }
@@ -120,7 +121,11 @@ func (telnetHandler *ShellHandler) ServeTELNET(ctx telnet.Context, writer telnet
 	var welcomeMessage  string
 	var exitMessage     string
 
-	prompt.WriteString(telnetHandler.Prompt)
+	if telnetHandler.PromptHandler == nil {
+		prompt.WriteString(telnetHandler.Prompt)
+	} else {
+		prompt.WriteString(telnetHandler.PromptHandler(ctx))
+	}
 
 	promptBytes          := prompt.Bytes()
 
@@ -161,6 +166,10 @@ func (telnetHandler *ShellHandler) ServeTELNET(ctx telnet.Context, writer telnet
 
 
 		if '\n' == p[0] {
+			if telnetHandler.PromptHandler != nil {
+				promptBytes = []byte(telnetHandler.PromptHandler(ctx))
+			}
+
 			lineString := line.String()
 
 			if "\r\n" == lineString {
